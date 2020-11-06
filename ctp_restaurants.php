@@ -139,7 +139,7 @@
             $id = get_the_ID(); 
             $user_id = wp_get_current_user(); 
 
-            $review_amount = $wpdb->get_rejsults( "SELECT * FROM wp_rates WHERE (post_id = $id)");
+            $review_amount = $wpdb->get_results( "SELECT * FROM wp_rates WHERE (post_id = $id)");
 
             $review_count = count($review_amount);
             return $content . "<p style='font-size: 15px; text-align:center;'> $review_count REVIEWS </p>"; 
