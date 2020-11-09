@@ -9,6 +9,8 @@
 
     //SKAPAR CUSTOM POST TYPES 
     function create_cpt_restaurant() {
+        wp_enqueue_style('style', plugin_dir_url( __FILE__ ) . '/includes/css/style.css');
+
         register_post_type('cpt_restaurant', 
             array(
                 'labels' => array (
