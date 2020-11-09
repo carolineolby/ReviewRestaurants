@@ -30,3 +30,4 @@ Varje order ska ha
 * vilken _status_ ordern har (recieved, canceled, shipped, delivered)
 
 Adminsidan för ordersystemet ska lista de 10 senaste ordrarna och admin ska kunna ändra order status.
+# VI SKA SKAPA ETT PLUGIN DÄR ANVÄNDAREN HAR MÖJLIGHETEN ATT RECENSERA RESTAURANGER. I WIDGETEN SORTERAS RESTAURANGERNA UTIFRÅN DEN SENASTRE RECENSIONEN OCH VISAS PÅ WIDGETEN. ANVÄNDAREN KOMMER ÄVEN KUNNA JUSTERA HUR MÅNGA RESTAURANGER SOM SKA VISAS ÅT GÅNGEN I WIDGETEN. 
