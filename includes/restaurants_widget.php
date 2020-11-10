@@ -47,9 +47,7 @@
 
         //CREATING WIDGET BACK-END
         function form($instance){
-            printf('<input type="number" name="%s" value="' . $instance['amount'] . '" placeholder="how many? "></input>',
-                $this->get_field_name("amount")
-            );
+            printf('<input type="number" name="%s" value="%s" placeholder="how many? "></input>', $this->get_field_name("amount"), $instance['amount']);
         }
     }
 

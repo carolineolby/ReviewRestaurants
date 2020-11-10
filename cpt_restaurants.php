@@ -6,7 +6,7 @@
     include( plugin_dir_path( __FILE__ ) . '/includes/restaurants_widget.php'); 
     include( plugin_dir_path( __FILE__ ) . '/includes/restaurants_admin.php'); 
 
-    //SKAPAR CUSTOM POST TYPES 
+    //CREATE CUSTOM POST TYPES 
     function create_cpt_restaurant() {
         wp_enqueue_style('style', plugin_dir_url( __FILE__ ) . '/includes/css/style.css');
 
@@ -24,14 +24,14 @@
     }
 
     //RATESSYSTEMET 
-    //AVINSTALLERA TABELLEN RATES
+    //UNINSTALL RATES TABLE IN PHP SQL 
     function rates_uninstall() {
         global $wpdb; 
         $table_name = $wpdb->prefix . "rates"; 
         $wpdb->query("DROP TABLE IF EXISTS $table_name"); 
     }
     
-    //SKAPAR TABELLEN I PHP SQL
+    //CREATE RATES TABLE IN PHP SQL
     function create_rates_table() {
         global $wpdb; 
 
@@ -70,6 +70,7 @@
     }
 
     //REMOVE A ROW IN RATE TABLE 
+    //SQL-INJECTION
     function uncheck_input() {
         global $wpdb; 
 
@@ -77,7 +78,11 @@
 
         if(isset($_POST['isremoved'])) {
             $post_id = $_POST['isremoved']; 
-            $wpdb->get_results( "DELETE FROM wp_rates WHERE (owner_id = $user_id->ID AND post_id = $post_id)");
+            $query = $wpdb->get_results->prepare( 
+                "DELETE FROM wp_rates WHERE (owner_id = %s AND post_id = %s)", 
+                $user_id->ID, 
+                $post_id );
+            $wpdb->query($query); 
         }
     }
 
@@ -96,7 +101,7 @@
 
             if($wpdb->num_rows == 0) {
                 $review = $_POST['review'];
-                return $content . 
+                $content .= 
                 "<form method=POST style='padding-top: 100px; text-align:center;'>
                     <input style='padding:20px;' type=select placeholder='add review' name=review>
                     <button style='background-color:#df3461; text-align:center;'> send your review </button>
@@ -122,7 +127,7 @@
             $review_count = count($review_amount); 
             
             if($wpdb->num_rows > 0) {
-                return $content . 
+                $content .= 
                 "<form method=POST style='padding-top: 100px; text-align:center;'>
                     <button style='background-color:#df3461;'> remove your review </button>
                     <input type=hidden name=isremoved value=$id></input>
@@ -132,7 +137,7 @@
         return $content; 
     }
 
-    //RÄKNA ANTALET REVIEWS 
+    //COUNT THE AMOUNT OF REVIEWS 
     function count_reviews($content) {
         global $wpdb; 
         global $review_count;  
@@ -144,7 +149,7 @@
             $review_amount = $wpdb->get_results( "SELECT * FROM wp_rates WHERE (post_id = $id)");
 
             $review_count = count($review_amount);
-            return $content . "<p style='font-size: 15px; text-align:center;'> $review_count REVIEWS </p> <h3 class='Headline_AllReviews'; text-align:center;> All reviews </h3>" ; 
+            $content .= "<p style='font-size: 15px; text-align:center;'> $review_count REVIEWS </p> <h3 class='Headline_AllReviews'; text-align:center;> All reviews </h3>" ; 
 
         }
         return $content; 
