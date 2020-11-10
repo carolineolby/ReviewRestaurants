@@ -1,3 +1,31 @@
 body {
-    background: blue; 
+    background: #b6b6b6; 
+    font-weight: 100;
+}
+
+.post-meta-single-top .post-meta {
+    justify-content: center;
+    display: none; 
+}
+
+/* ARCHIVE TITLE */ 
+.archive-title {
+    font-weight: 100;
+}
+
+
+/* POST TITLE */
+h1.entry-title, h2.entry-title {
+    margin: 0;
+    font-weight: 100;
+}
+
+/* COUNT REVIEWS */
+.Headline_AllReviews {
+    font-weight: 100;
+}
+
+/* WIDGET TITLE */
+.widget .widget-title {
+    font-weight: 200;
 }

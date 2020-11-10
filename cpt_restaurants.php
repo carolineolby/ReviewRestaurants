@@ -5,7 +5,6 @@
 
     include( plugin_dir_path( __FILE__ ) . '/includes/restaurants_widget.php'); 
     include( plugin_dir_path( __FILE__ ) . '/includes/restaurants_admin.php'); 
-    include( plugin_dir_path( __FILE__ ) . '/includes/restaurants_scripts.php'); 
 
     //SKAPAR CUSTOM POST TYPES 
     function create_cpt_restaurant() {
@@ -98,7 +97,7 @@
             if($wpdb->num_rows == 0) {
                 $review = $_POST['review'];
                 return $content . 
-                "<form method=POST style='text-align:center;'>
+                "<form method=POST style='padding-top: 100px; text-align:center;'>
                     <input style='padding:20px;' type=select placeholder='add review' name=review>
                     <button style='background-color:#df3461; text-align:center;'> send your review </button>
                     <input type=hidden name=issubmit value=$id></input>
@@ -124,8 +123,8 @@
             
             if($wpdb->num_rows > 0) {
                 return $content . 
-                "<form method=POST style='text-align:center;'>
-                    <button style='background-color:#df3461; text-align:center;'> remove your review </button>
+                "<form method=POST style='padding-top: 100px; text-align:center;'>
+                    <button style='background-color:#df3461;'> remove your review </button>
                     <input type=hidden name=isremoved value=$id></input>
                 </form>"; 
             }
@@ -145,7 +144,7 @@
             $review_amount = $wpdb->get_results( "SELECT * FROM wp_rates WHERE (post_id = $id)");
 
             $review_count = count($review_amount);
-            return $content . "<p style='font-size: 15px; text-align:center;'> $review_count REVIEWS </p>"; 
+            return $content . "<p style='font-size: 15px; text-align:center;'> $review_count REVIEWS </p> <h3 class='Headline_AllReviews'; text-align:center;> All reviews </h3>" ; 
 
         }
         return $content; 
@@ -154,30 +153,29 @@
 
     //DISPLAY REVIEWS 
     function display_reviews($content) {
-        // function is_archive() {
-        //     global $wp_query;
-         
-        //     if ( ! isset( $wp_query ) ) {
-        //         _doing_it_wrong( __FUNCTION__, __( 'Conditional query tags do not work before the query is run. Before then, they always return false.' ), '3.1.0' );
-        //         return false;
-        //     }
-         
-        //     return $wp_query->is_archive();
-        // }
         global $wpdb; 
 
         if (is_singular() && in_the_loop() && is_main_query() ) { 
             $id = get_the_ID(); 
             $user_id = wp_get_current_user(); 
 
-            $review_displays = $wpdb->get_results( "SELECT rates_content FROM wp_rates WHERE (post_id = $id)");
+            // $review_displays = $wpdb->get_results( "SELECT owner_id, rates_content FROM wp_rates WHERE owner_id = $user_id->ID AND (post_id = $id)");
+            $review_displays = $wpdb->get_results( 
+                 "SELECT wp_users.display_name, wp_rates.rates_content
+                 FROM wp_users
+                 INNER JOIN wp_rates 
+                 ON wp_rates.owner_id = wp_users.ID
+                 WHERE wp_rates.owner_id = wp_users.ID"
+            );
 
             foreach($review_displays as $review_display) {
+                $display_users = $review_display->display_name; 
                 $display = $review_display->rates_content; 
+                return $content . 
+                "<div><div style='background: #fff; padding: 20px;'>
+                    <p style='color: #000; font-size: 20px;'> user: $display_users <br> $display</p>
+                </div></div>"; 
             }
-
-            return $content . "<div style='background: #fff; text-align:center;'><p style='color: #000; font-size: 20px;'>$display</p></div>"; 
-
         }
         return $content; 
     }
