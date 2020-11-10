@@ -159,23 +159,22 @@
             $id = get_the_ID(); 
             $user_id = wp_get_current_user(); 
 
-            // $review_displays = $wpdb->get_results( "SELECT owner_id, rates_content FROM wp_rates WHERE owner_id = $user_id->ID AND (post_id = $id)");
             $review_displays = $wpdb->get_results( 
                  "SELECT wp_users.display_name, wp_rates.rates_content
                  FROM wp_users
                  INNER JOIN wp_rates 
-                 ON wp_rates.owner_id = wp_users.ID
-                 WHERE wp_rates.owner_id = wp_users.ID"
+                 ON wp_rates.owner_id = wp_users.ID AND post_id = $id
+                 WHERE wp_rates.owner_id = wp_users.ID AND post_id = $id"
             );
 
             foreach($review_displays as $review_display) {
                 $display_users = $review_display->display_name; 
-                $display = $review_display->rates_content; 
-                return $content . 
-                "<div><div style='background: #fff; padding: 20px;'>
+                $display = $review_display->rates_content;  
+                $content .= "<div><div style='background: #fff; padding: 20px;'>
                     <p style='color: #000; font-size: 20px;'> user: $display_users <br> $display</p>
                 </div></div>"; 
             }
+            return $content; 
         }
         return $content; 
     }
