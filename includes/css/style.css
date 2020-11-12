@@ -29,3 +29,29 @@ h1.entry-title, h2.entry-title {
 .widget .widget-title {
     font-weight: 200;
 }
+
+/** RESTAURANTS REVIEW COLOR **/ 
+/* review_btn_color */
+.pink {
+    background-color: #ff006a; 
+}
+
+.purple {
+    background-color: #880088; 
+}
+
+.blue {
+    background-color: #0004ff; 
+}
+
+.green {
+    background-color: #006e00; 
+}
+
+.orange {
+    background-color: #ff9100; 
+}
+
+.red {
+    background-color: #cf0404; 
+}

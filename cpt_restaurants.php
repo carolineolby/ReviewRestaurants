@@ -64,7 +64,9 @@
         if(isset($_POST['issubmit'])) {
             $post_id = $_POST['issubmit']; 
             $review = $_POST['review'];
-            $wpdb->get_results( "INSERT INTO wp_rates (rates_date, rates_content, owner_id, post_id) VALUES (CURRENT_TIMESTAMP, '$review', $user_id->ID, $post_id)"); 
+            // $wpdb->get_results( "INSERT INTO wp_rates (rates_date, rates_content, owner_id, post_id) VALUES (CURRENT_TIMESTAMP, '$review', $user_id->ID, $post_id)"); 
+            $query = $wpdb->prepare( "INSERT INTO wp_rates (rates_date, rates_content, owner_id, post_id) VALUES (CURRENT_TIMESTAMP, %s, %s, %s)", $review, $user_id->ID, $post_id); 
+            $wpdb->get_results($query); 
         }
     
     }
@@ -78,11 +80,9 @@
 
         if(isset($_POST['isremoved'])) {
             $post_id = $_POST['isremoved']; 
-            $query = $wpdb->get_results->prepare( 
-                "DELETE FROM wp_rates WHERE (owner_id = %s AND post_id = %s)", 
-                $user_id->ID, 
-                $post_id );
-            $wpdb->query($query); 
+            // $wpdb->get_results( "DELETE FROM wp_rates WHERE (owner_id = $user_id->ID AND post_id = $post_id)");
+            $query = $wpdb->prepare( "DELETE FROM wp_rates WHERE (owner_id = %s AND post_id = %s)", $user_id->ID, $post_id );
+            $wpdb->get_results($query); 
         }
     }
 
@@ -104,7 +104,7 @@
                 $content .= 
                 "<form method=POST style='padding-top: 100px; text-align:center;'>
                     <input style='padding:20px;' type=select placeholder='add review' name=review>
-                    <button style='background-color:#df3461; text-align:center;'> send your review </button>
+                    <button class=" . get_option('review_btn_color') . " id='review_btn_color' style='text-align:center;'> send your review </button>
                     <input type=hidden name=issubmit value=$id></input>
                 </form>"; 
 
@@ -129,7 +129,7 @@
             if($wpdb->num_rows > 0) {
                 $content .= 
                 "<form method=POST style='padding-top: 100px; text-align:center;'>
-                    <button style='background-color:#df3461;'> remove your review </button>
+                    <button class=" . get_option('remove_review_btn_color') . " id='remove_review_btn_color'> remove your review </button>
                     <input type=hidden name=isremoved value=$id></input>
                 </form>"; 
             }
