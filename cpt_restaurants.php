@@ -63,10 +63,9 @@
             $user_id = wp_get_current_user();
             $post_id = $_POST['isreviewed']; 
             $review = $_POST['review'];
-            // $wpdb->get_results( "INSERT INTO wp_rates (rates_date, rates_content, owner_id, post_id) VALUES (CURRENT_TIMESTAMP, '$review', $user_id->ID, $post_id)"); 
-
+            
             //SQL Injection
-            $query = $wpdb->prepare( "INSERT INTO wp_rates (rates_date, rates_content, owner_id, post_id) VALUES (CURRENT_TIMESTAMP, %s, %s, %s)", $review, $user_id->ID, $post_id); 
+            $query = $wpdb->prepare( "INSERT INTO wp_rates (rates_date, rates_content, owner_id, post_id) VALUES (CURRENT_TIMESTAMP, %s, %s, %s)", $review, $user_id->ID, $post_id ); 
             $wpdb->get_results($query); 
         }
     
@@ -79,7 +78,6 @@
         if(isset($_POST['isremoved'])) {
             $user_id = wp_get_current_user(); 
             $post_id = $_POST['isremoved']; 
-            // $wpdb->get_results( "DELETE FROM wp_rates WHERE (owner_id = $user_id->ID AND post_id = $post_id)");
 
             //SQL Injection
             $query = $wpdb->prepare( "DELETE FROM wp_rates WHERE (owner_id = %s AND post_id = %s)", $user_id->ID, $post_id );
@@ -90,22 +88,16 @@
     //CREATE REVIEW BUTTON
     function add_input($content) {
         global $wpdb; 
-        global $review_count; 
 
         if (is_singular() && in_the_loop() && is_main_query() ) {
             $id = get_the_ID(); 
             $user_id = wp_get_current_user(); 
 
-            // $query = $wpdb->get_results( "SELECT rates_date, owner_id, post_id FROM wp_rates WHERE (owner_id = $user_id->ID AND post_id = $post_id) ORDER BY rates_date DESC LIMIT 10");
-
             //SQL Injection
-            $query = $wpdb->prepare( "SELECT rates_date, owner_id, post_id FROM wp_rates WHERE (owner_id = %s AND post_id = %s) ORDER BY rates_date DESC LIMIT 10", $user_id->ID, $post_id);
+            $query = $wpdb->prepare( "SELECT rates_date, owner_id, post_id FROM wp_rates WHERE (owner_id = %s AND post_id = %s) ORDER BY rates_date DESC LIMIT 10", $user_id->ID, $id);
             $wpdb->get_results($query); 
 
-            $review_count = count($review_amount); 
-
             if($wpdb->num_rows == 0) {
-                $review = $_POST['review'];
                 $content .= 
                 "<form method=POST style='padding-top: 100px; text-align:center;'>
                     <input style='padding:20px;' type=select placeholder='add review' name=review>
@@ -121,19 +113,14 @@
     //CREATE REMOVE REVIEW BUTTON
     function remove_input($content) {
         global $wpdb; 
-        global $review_count; 
 
         if (is_singular() && in_the_loop() && is_main_query() ) { 
             $id = get_the_ID(); 
             $user_id = wp_get_current_user(); 
 
-            // $query = $wpdb->get_results( "SELECT owner_id, post_id FROM wp_rates WHERE (owner_id = $user_id->ID AND post_id = $id)");
-
             //SQL Injection
             $query = $wpdb->prepare( "SELECT owner_id, post_id FROM wp_rates WHERE (owner_id = %s AND post_id = %s)", $user_id->ID, $id);
             $wpdb->get_results($query); 
-
-            $review_count = count($review_amount); 
             
             if($wpdb->num_rows > 0) {
                 $content .= 
@@ -156,7 +143,7 @@
             $user_id = wp_get_current_user(); 
 
             $review_amount = $wpdb->get_results( "SELECT * FROM wp_rates WHERE (post_id = $id)");
-
+            
             //SQL Injection
             // $review_amount = $wpdb->prepare( "SELECT * FROM wp_rates WHERE (post_id = %s)", $id);
             // $wpdb->get_results($review_amount); 
@@ -195,6 +182,17 @@
         //    );
         //    $wpdb->get_results($review_displays); 
 
+        //    if (is_iterable($review_displays))
+        //     {
+        //         foreach($review_displays as $review_display) {
+        //             $display_users = $review_display->display_name; 
+        //             $display = $review_display->rates_content;  
+        //             $content .= "<div><div style='background: #fff; padding: 20px;'>
+        //                 <p style='color: #000; font-size: 20px;'> user: $display_users <br> $display</p>
+        //             </div></div>"; 
+        //         }
+        //         return $content; 
+        //     }
             foreach($review_displays as $review_display) {
                 $display_users = $review_display->display_name; 
                 $display = $review_display->rates_content;  
