@@ -23,7 +23,7 @@
         );
     }
 
-    //RATESSYSTEMET 
+    //REVIEWSSYSTEM 
     //UNINSTALL RATES TABLE IN PHP SQL 
     function rates_uninstall() {
         global $wpdb; 
@@ -31,7 +31,7 @@
         $wpdb->query("DROP TABLE IF EXISTS $table_name"); 
     }
     
-    //CREATE RATES TABLE IN PHP SQL
+    //CREATE REVIEWS TABLE IN PHP SQL
     function create_rates_table() {
         global $wpdb; 
 
@@ -55,38 +55,39 @@
         dbDelta ($sql); 
     }
 
-    //ADD A ROW IN RATE TABLE
+    //ADD A ROW IN REVIEW TABLE
     function check_input() {
         global $wpdb; 
-        
-        $user_id = wp_get_current_user();
-
-        if(isset($_POST['issubmit'])) {
-            $post_id = $_POST['issubmit']; 
+    
+        if(isset($_POST['isreviewed'])) {
+            $user_id = wp_get_current_user();
+            $post_id = $_POST['isreviewed']; 
             $review = $_POST['review'];
             // $wpdb->get_results( "INSERT INTO wp_rates (rates_date, rates_content, owner_id, post_id) VALUES (CURRENT_TIMESTAMP, '$review', $user_id->ID, $post_id)"); 
+
+            //SQL Injection
             $query = $wpdb->prepare( "INSERT INTO wp_rates (rates_date, rates_content, owner_id, post_id) VALUES (CURRENT_TIMESTAMP, %s, %s, %s)", $review, $user_id->ID, $post_id); 
             $wpdb->get_results($query); 
         }
     
     }
 
-    //REMOVE A ROW IN RATE TABLE 
-    //SQL-INJECTION
+    //REMOVE A ROW IN REVIEW TABLE 
     function uncheck_input() {
         global $wpdb; 
 
-        $user_id = wp_get_current_user(); 
-
         if(isset($_POST['isremoved'])) {
+            $user_id = wp_get_current_user(); 
             $post_id = $_POST['isremoved']; 
             // $wpdb->get_results( "DELETE FROM wp_rates WHERE (owner_id = $user_id->ID AND post_id = $post_id)");
+
+            //SQL Injection
             $query = $wpdb->prepare( "DELETE FROM wp_rates WHERE (owner_id = %s AND post_id = %s)", $user_id->ID, $post_id );
             $wpdb->get_results($query); 
         }
     }
 
-    //CREATE RATE BUTTON
+    //CREATE REVIEW BUTTON
     function add_input($content) {
         global $wpdb; 
         global $review_count; 
@@ -95,7 +96,11 @@
             $id = get_the_ID(); 
             $user_id = wp_get_current_user(); 
 
-            $wpdb->get_results( "SELECT rates_date, owner_id, post_id FROM wp_rates WHERE (owner_id = $user_id->ID AND post_id = $id) ORDER BY rates_date DESC LIMIT 10");
+            // $query = $wpdb->get_results( "SELECT rates_date, owner_id, post_id FROM wp_rates WHERE (owner_id = $user_id->ID AND post_id = $post_id) ORDER BY rates_date DESC LIMIT 10");
+
+            //SQL Injection
+            $query = $wpdb->prepare( "SELECT rates_date, owner_id, post_id FROM wp_rates WHERE (owner_id = %s AND post_id = %s) ORDER BY rates_date DESC LIMIT 10", $user_id->ID, $post_id);
+            $wpdb->get_results($query); 
 
             $review_count = count($review_amount); 
 
@@ -105,7 +110,7 @@
                 "<form method=POST style='padding-top: 100px; text-align:center;'>
                     <input style='padding:20px;' type=select placeholder='add review' name=review>
                     <button class=" . get_option('review_btn_color') . " id='review_btn_color' style='text-align:center;'> send your review </button>
-                    <input type=hidden name=issubmit value=$id></input>
+                    <input type=hidden name=isreviewed value=$id></input>
                 </form>"; 
 
             }   
@@ -113,7 +118,7 @@
         return $content; 
     }
 
-    //CREATE UNRATE BUTTON
+    //CREATE REMOVE REVIEW BUTTON
     function remove_input($content) {
         global $wpdb; 
         global $review_count; 
@@ -122,8 +127,12 @@
             $id = get_the_ID(); 
             $user_id = wp_get_current_user(); 
 
-            $wpdb->get_results( "SELECT owner_id, post_id FROM wp_rates WHERE (owner_id = $user_id->ID AND post_id = $id)" );
-    
+            // $query = $wpdb->get_results( "SELECT owner_id, post_id FROM wp_rates WHERE (owner_id = $user_id->ID AND post_id = $id)");
+
+            //SQL Injection
+            $query = $wpdb->prepare( "SELECT owner_id, post_id FROM wp_rates WHERE (owner_id = %s AND post_id = %s)", $user_id->ID, $id);
+            $wpdb->get_results($query); 
+
             $review_count = count($review_amount); 
             
             if($wpdb->num_rows > 0) {
@@ -148,6 +157,10 @@
 
             $review_amount = $wpdb->get_results( "SELECT * FROM wp_rates WHERE (post_id = $id)");
 
+            //SQL Injection
+            // $review_amount = $wpdb->prepare( "SELECT * FROM wp_rates WHERE (post_id = %s)", $id);
+            // $wpdb->get_results($review_amount); 
+
             $review_count = count($review_amount);
             $content .= "<p style='font-size: 15px; text-align:center;'> $review_count REVIEWS </p> <h3 class='Headline_AllReviews'; text-align:center;> All reviews </h3>" ; 
 
@@ -171,6 +184,16 @@
                  ON wp_rates.owner_id = wp_users.ID AND post_id = $id
                  WHERE wp_rates.owner_id = wp_users.ID AND post_id = $id"
             );
+
+            //SQL Injection
+        //     $review_displays = $wpdb->prepare( 
+        //         "SELECT wp_users.display_name, wp_rates.rates_content
+        //         FROM wp_users
+        //         INNER JOIN wp_rates 
+        //         ON wp_rates.owner_id = wp_users.ID AND post_id = %s
+        //         WHERE wp_rates.owner_id = wp_users.ID AND post_id = %s", $id, $id
+        //    );
+        //    $wpdb->get_results($review_displays); 
 
             foreach($review_displays as $review_display) {
                 $display_users = $review_display->display_name; 

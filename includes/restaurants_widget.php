@@ -23,7 +23,7 @@
             echo $args['before_title'] . $title . $args['after_title'];
 
             $sortByLatests = $wpdb->get_results( 
-                //SORTERAR EFTER SENASTE RATING
+                //SORY BY LATEST REVIEW
                 "SELECT wp_posts.post_title, wp_rates.rates_date FROM wp_posts 
                 INNER JOIN wp_rates ON wp_rates.post_id = wp_posts.ID
                 WHERE wp_rates.post_id = wp_posts.ID GROUP BY wp_rates.rates_date ORDER BY rates_date DESC" 
@@ -47,6 +47,7 @@
 
         //CREATING WIDGET BACK-END
         function form($instance){
+            // SQL Injection
             printf('<input type="number" name="%s" value="%s" placeholder="how many? "></input>', $this->get_field_name("amount"), $instance['amount']);
         }
     }

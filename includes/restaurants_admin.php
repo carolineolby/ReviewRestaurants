@@ -14,7 +14,7 @@
         add_settings_section('restaurants-admin-form-options', 'Change button color: ', 'restaurants_admin_form', 'restaurant-admin');
     }
 
-
+    //RESTAURANTS ADMIN FORM 
     function restaurants_admin_form() { 
         $hidden_field_name = 'mt_submit_hidden';
 
