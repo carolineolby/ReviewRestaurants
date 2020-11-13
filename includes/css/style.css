@@ -32,6 +32,17 @@ h1.entry-title, h2.entry-title {
 
 /** RESTAURANTS ADMIN OPTIONS - BUTTON COLOR **/ 
 /* review_btn_color */
+.restaurants_form {
+    display: flex; 
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 40%;
+}
+
+.restaurants_form_select {
+    margin-bottom: 20px; 
+}
+
 .pink {
     background-color: #ff006a; 
 }

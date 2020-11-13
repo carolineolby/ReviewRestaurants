@@ -20,17 +20,17 @@
 
         ?>
         <div class="restaurants_form">
-            <form name='change_btn_color' method='post' action=''>
+            <form class="restaurants_form" name='change_btn_color' method='post' action=''>
                 <input type='hidden' name='<?php echo $hidden_field_name; ?>' value='Y'>
                     <label for="review_btn_color">Review Button:</label>
-                    <select id='review_btn_color_select' name='review_btn_color'>
+                    <select class='restaurants_form_select' id='review_btn_color_select' name='review_btn_color'>
                         <option value="1" <?php if($_POST['review_btn_color'] == "1" ) echo 'selected' ; ?>>pink</option>
                         <option value="2" <?php if($_POST['review_btn_color'] == "2" ) echo 'selected' ; ?>>purple</option>
                         <option value="3" <?php if($_POST['review_btn_color'] == "3" ) echo 'selected' ; ?>>blue</option>
                     </select>
 
                     <label for="remove_review_btn_color">Remove Review Button:</label>
-                    <select id='remove_review_btn_color' name='remove_review_btn_color'>
+                    <select class='restaurants_form_select' id='remove_review_btn_color' name='remove_review_btn_color'>
                         <option value="4" <?php if($_POST['remove_review_btn_color'] == "4" ) echo 'selected' ; ?>>green</option>
                         <option value="5" <?php if($_POST['remove_review_btn_color'] == "5" ) echo 'selected' ; ?>>orange</option>
                         <option value="6" <?php if($_POST['remove_review_btn_color'] == "6" ) echo 'selected' ; ?>>red</option>
