@@ -142,13 +142,11 @@
             $id = get_the_ID(); 
             $user_id = wp_get_current_user(); 
 
-            $review_amount = $wpdb->get_results( "SELECT * FROM wp_rates WHERE (post_id = $id)");
-            
             //SQL Injection
-            // $review_amount = $wpdb->prepare( "SELECT * FROM wp_rates WHERE (post_id = %s)", $id);
-            // $wpdb->get_results($review_amount); 
+            $review_amount = $wpdb->prepare( "SELECT * FROM wp_rates WHERE (post_id = %s)", $id);
+            $result_review_amount = $wpdb->get_results($review_amount); 
 
-            $review_count = count($review_amount);
+            $review_count = count($result_review_amount);
             $content .= "<p style='font-size: 15px; text-align:center;'> $review_count REVIEWS </p> <h3 class='Headline_AllReviews'; text-align:center;> All reviews </h3>" ; 
 
         }
@@ -164,38 +162,19 @@
             $id = get_the_ID(); 
             $user_id = wp_get_current_user(); 
 
-            $review_displays = $wpdb->get_results( 
-                 "SELECT wp_users.display_name, wp_rates.rates_content
-                 FROM wp_users
-                 INNER JOIN wp_rates 
-                 ON wp_rates.owner_id = wp_users.ID AND post_id = $id
-                 WHERE wp_rates.owner_id = wp_users.ID AND post_id = $id"
-            );
-
             //SQL Injection
-        //     $review_displays = $wpdb->prepare( 
-        //         "SELECT wp_users.display_name, wp_rates.rates_content
-        //         FROM wp_users
-        //         INNER JOIN wp_rates 
-        //         ON wp_rates.owner_id = wp_users.ID AND post_id = %s
-        //         WHERE wp_rates.owner_id = wp_users.ID AND post_id = %s", $id, $id
-        //    );
-        //    $wpdb->get_results($review_displays); 
+            $review_displays = $wpdb->prepare( 
+                "SELECT wp_users.display_name, wp_rates.rates_content
+                FROM wp_users
+                INNER JOIN wp_rates 
+                ON wp_rates.owner_id = wp_users.ID AND post_id = %s
+                WHERE wp_rates.owner_id = wp_users.ID AND post_id = %s", $id, $id
+           );
+           $result_review_displays = $wpdb->get_results($review_displays); 
 
-        //    if (is_iterable($review_displays))
-        //     {
-        //         foreach($review_displays as $review_display) {
-        //             $display_users = $review_display->display_name; 
-        //             $display = $review_display->rates_content;  
-        //             $content .= "<div><div style='background: #fff; padding: 20px;'>
-        //                 <p style='color: #000; font-size: 20px;'> user: $display_users <br> $display</p>
-        //             </div></div>"; 
-        //         }
-        //         return $content; 
-        //     }
-            foreach($review_displays as $review_display) {
-                $display_users = $review_display->display_name; 
-                $display = $review_display->rates_content;  
+            foreach($result_review_displays as $result_review_display) {
+                $display_users = $result_review_display->display_name; 
+                $display = $result_review_display->rates_content;  
                 $content .= "<div><div style='background: #fff; padding: 20px;'>
                     <p style='color: #000; font-size: 20px;'> user: $display_users <br> $display</p>
                 </div></div>"; 
