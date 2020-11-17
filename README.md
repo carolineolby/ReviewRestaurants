@@ -33,5 +33,4 @@ Adminsidan för ordersystemet ska lista de 10 senaste ordrarna och admin ska kun
 
 
 ## PLUGIN Restaurants
-### Andreas & Caroline 
-Vi har skapat ett plugin där användaren har möjligheten att recensera restauranger. I widgeten sorteras restaurangerna utifrån den senaste recensionen och visas i widgeten på användargränssnittet. Användaren kommer även att kunna justera hur många recenserade restauranger som visas åt gången i. På pluginets Admin Menu har användaren tillgång till att justera knapparnas färg med hjälp av en select
+Jag har skapat ett plugin där användaren har möjligheten att recensera restauranger. I widgeten sorteras restaurangerna utifrån den senaste recensionen och visas i widgeten på användargränssnittet. Användaren kommer även att kunna justera hur många recenserade restauranger som visas åt gången i. På pluginets Admin Menu har användaren tillgång till att justera knapparnas färg med hjälp av en select
